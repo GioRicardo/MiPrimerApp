@@ -21,50 +21,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Declaracion de variables:
     EditText nombre,correo,contrasena;
     Button btnRegistrar, btnIniciar;
-    boolean seEncontroUsuario = false;
+    boolean diligenciados;
     Usuario usuarioEncontrado;
     ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
 
     //Metodos:
     private void registrar()
     {
-        if (nombre.getText().toString().isEmpty() || correo.getText().toString().isEmpty() || contrasena.getText().toString().isEmpty())
-        {
-            Toast.makeText(MainActivity.this, "Llena todos los campos para registrarte", Toast.LENGTH_LONG).show();
-        } else
-        {
+        diligenciados = validarCamposllenos();
+        
+        if (diligenciados){
             listaUsuarios.add(new Usuario(
                             nombre.getText().toString(),
                             correo.getText().toString(),
-                            contrasena.getText().toString()
-                    )
+                            contrasena.getText().toString())
             );
             Toast.makeText(MainActivity.this, "Es un gusto conocerte " + nombre.getText(), Toast.LENGTH_LONG).show();
             startActivity(new Intent(MainActivity.this, MenuPrincipal.class));
+            limpiar();
         }
     }
     private void ingresar()
     {
-        if (nombre.getText().toString().isEmpty() || correo.getText().toString().isEmpty() || contrasena.getText().toString().isEmpty())
-        {
-            Toast.makeText(MainActivity.this, "Llena todos los campos para iniciar sesion", Toast.LENGTH_LONG).show();
-        } else
+        // Se vacia la variable que encuentra al usuario a logear:
+        usuarioEncontrado = null;
+
+        diligenciados = validarCamposllenos();
+        if (diligenciados)
         {
             for (Usuario usuario : listaUsuarios) {
                 if ( correo.getText().toString().equals(usuario.getCorreo()) && contrasena.getText().toString().equals(usuario.getContrasena())){
                     usuarioEncontrado = usuario;
-                    seEncontroUsuario = true;
                 }
             }
-                if(seEncontroUsuario){
-                    startActivity(new Intent(MainActivity.this, MenuPrincipalLogeado.class));
-                    Toast.makeText(MainActivity.this, "Hola de nuevo " + usuarioEncontrado.getNombre(), Toast.LENGTH_LONG).show();
+                if(usuarioEncontrado == null){
+                    Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(MainActivity.this, MenuPrincipalLogeado.class));
+                    Toast.makeText(MainActivity.this, "Hola de nuevo " + usuarioEncontrado.getNombre(), Toast.LENGTH_LONG).show();
+                    limpiar();
                 }
 
         }
+    }
+
+    private boolean validarCamposllenos() {
+        boolean diligenciados = false;
+        if (nombre.getText().toString().isEmpty())
+        {
+            nombre.setError("Nombre Vacio");
+            nombre.requestFocus();
+
+        } else if (correo.getText().toString().isEmpty())
+        {
+            correo.setError("Correo Vacio");
+            correo.requestFocus();
+        } else if (contrasena.getText().toString().isEmpty()) {
+            contrasena.setError("Contraseña Vacia");
+            contrasena.requestFocus();
+        } else {
+             diligenciados = true;
+        }
+        return diligenciados;
+    }
+    private void limpiar(){
+        nombre.setText("");
+        correo.setText("");
+        contrasena.setText("");
     }
     //onCreate:
     @Override
