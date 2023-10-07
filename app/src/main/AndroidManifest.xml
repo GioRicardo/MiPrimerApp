@@ -26,10 +26,16 @@
             android:name=".MenuPrincipalLogeado"
             android:exported="false" />
         <activity
-            android:name=".MenuPrincipal"
+            android:name=".MenuPrincipalRegistrado"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MenuConsultaUsuarios"
+            android:exported="false" />
+        <activity
+            android:name=".ActualizarUsuario"
             android:exported="false" />
 
     </application>
